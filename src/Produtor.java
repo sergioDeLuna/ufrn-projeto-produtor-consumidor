@@ -4,9 +4,11 @@
  *
  */
 public class Produtor extends Thread {
-	
+	//Monitor
 	private Monitor monitor;
-	int item = 1;
+	
+	//Item
+	int item;
 	
 	
 	/**
@@ -24,9 +26,13 @@ public class Produtor extends Thread {
 	 */
 	@Override
 	public void run() {
-		System.out.println("Trabalho de produzir solicitado pelo " + Thread.currentThread().getName());
 		try {
-			monitor.inserir(item);
+			for (int i = 0; i < 10; i++) {
+				item = (int)(Math.random() * 100 + 1);
+				System.out.println(Thread.currentThread().getName() + " colocando item " + item + " no buffer...");
+				monitor.inserir(item);
+				Thread.sleep((long)(Math.random() * 500));
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

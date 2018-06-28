@@ -4,8 +4,11 @@
  *
  */
 public class Main {
-	//Quantidade de Jornalistas - Constante
-	private static final int QUANTIDADE_JORNALISTAS = 5;
+	//Quantidade de Consumidores e Produtores - Constante
+	private static final int QUANTIDADE_CONSUMIDORES_PRODUTORES = 3;
+	
+	//Limite do buffer
+	private static final int LIMITE_BUFFER = 5;
 	
 	//Array para armazenar os consumidores
 	private static Consumidor[] consumidores;
@@ -20,35 +23,36 @@ public class Main {
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException{
-		Monitor monitor = new Monitor();
 		
-		inicializaJornalistas(monitor);
+		Monitor monitor = new Monitor(LIMITE_BUFFER);
+		
+		inicializaConsumidoresProdutores(monitor);
 
 	   try {
-	      startJornalistas();
-	      waitingJornalistas();
+		  startConsumidoresProdutores();
+		  waitingConsumidoresProdutores();
 	    } catch (InterruptedException e) {
 	      e.printStackTrace();
 	    } 
 	   
-	   System.out.println("\nOs jornalistas finalizaram seus trabalhos!");
+	   System.out.println("\nOs Consumidores e Produtores finalizaram seus trabalhos!");
         
 	}
 	
 	/**
-	 * Método para inicializar os jornalistas
-	 * @param jornal
+	 * Método para inicializar os consumidores e produtores
+	 * @param monitor
 	 */
-	 private static void inicializaJornalistas(Monitor monitor) {
+	 private static void inicializaConsumidoresProdutores(Monitor monitor) {
 		
-		consumidores = new Consumidor[QUANTIDADE_JORNALISTAS];
-	    for (int i = 0; i < QUANTIDADE_JORNALISTAS; i++) {
-	    	consumidores[i] = new Consumidor("Consumidor: " + (i + 1), monitor);
+		consumidores = new Consumidor[QUANTIDADE_CONSUMIDORES_PRODUTORES];
+	    for (int i = 0; i < QUANTIDADE_CONSUMIDORES_PRODUTORES; i++) {
+	    	consumidores[i] = new Consumidor("Consumidor #" + (i + 1), monitor);
 	    }
 	    
-		produtores = new Produtor[QUANTIDADE_JORNALISTAS];
-	    for (int i = 0; i < QUANTIDADE_JORNALISTAS; i++) {
-	    	produtores[i] = new Produtor("Produtor: " + (i + 1), monitor);
+		produtores = new Produtor[QUANTIDADE_CONSUMIDORES_PRODUTORES];
+	    for (int i = 0; i < QUANTIDADE_CONSUMIDORES_PRODUTORES; i++) {
+	    	produtores[i] = new Produtor("Produtor #" + (i + 1), monitor);
 	    }
 	 }
 	
@@ -56,7 +60,7 @@ public class Main {
 	   * Método para fazer com os processos aguardem
 	   * @throws InterruptedException 
 	   */
-	  private static void waitingJornalistas() throws InterruptedException {
+	  private static void waitingConsumidoresProdutores() throws InterruptedException {
 		    
 		  	for (Consumidor consumidor : consumidores) {
 		  		consumidor.join();
@@ -68,9 +72,9 @@ public class Main {
 	  }
 	
 	  /**
-	   * Realiza o start dos jornalistas
+	   * Realiza o start dos consumidores e dos produtores 
 	   */
-	  private static void startJornalistas() {
+	  private static void startConsumidoresProdutores() {
 		  for (Consumidor consumidor : consumidores) {
 			  consumidor.start();
 		    }

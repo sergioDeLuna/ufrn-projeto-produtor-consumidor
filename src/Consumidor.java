@@ -4,9 +4,11 @@
  *
  */
 public class Consumidor extends Thread {
-	
+	//Monitor
 	private Monitor monitor;
-	int item = 1;
+	
+	//Item
+	private int item;
 	
 	/**
 	 * Método de Inicialização
@@ -22,9 +24,12 @@ public class Consumidor extends Thread {
 	 */
 	@Override
 	public void run() {
-		System.out.println("Trabalho de consumo solicitado pelo " + Thread.currentThread().getName());
 		try {
-			monitor.remover(item);
+			for (int i = 0; i < 10; i++) {
+				item = monitor.remover();
+				System.out.println(Thread.currentThread().getName() + " retirando item " + item + " do buffer...");
+				Thread.sleep((long)(Math.random() * 500));
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,40 +1,59 @@
 import java.util.LinkedList;
 import java.util.Queue;
-
+/**
+ * Classe que gerencia os processos através do mecanismo de Monitor 
+ * @author sergioluna
+ *
+ */
 public class Monitor {
+	//Buffer representado por uma fila
+	Queue<Integer> fila;
 	
-	Queue<Integer> fila = new LinkedList<Integer>();
-	int contador = 0;
-	int tamanhoDaFila = 5;
+	//Limite da Fila
+	int limite;
 	
-	public void inserir(int item) throws InterruptedException {
-		synchronized (this) {
-			
-			if(contador == tamanhoDaFila)
-				wait();
-			
-			fila.add(item);
-			contador++;
-			
-//			if(contador == 1) 
-//				signal();
-			
+	//Quantidade de Elementos
+	int quantidadeElementos;
+	
+	public Monitor(int limite){
+		this.limite = limite;
+		this.quantidadeElementos = 0;
+		fila = new LinkedList<Integer>();
 	}
+	
+	/**
+	 * Inserir itens
+	 * @param item
+	 * @throws InterruptedException
+	 */
+	public synchronized void inserir(int item) throws InterruptedException {
+		while(quantidadeElementos == limite) {
+			System.out.println(Thread.currentThread().getName() + " aguardando..");	
+			wait();
+		}
+			
+		fila.add(item);
+		quantidadeElementos++;
+		notifyAll();
 		
 	}
 	
-	public void remover(int item) throws InterruptedException {
-		synchronized (this) {
-			
-			if(contador == 0)
-				wait();
-			
-			fila.remove(item);
-			contador--;
-			
-//			if(contador == 1) 
-//				signal();
-		}	
-	}
+	/**
+	 * Remover item
+	 * @param item
+	 * @throws InterruptedException
+	 */
+	public synchronized int remover() throws InterruptedException {
+		while(quantidadeElementos == 0) {
+			System.out.println(Thread.currentThread().getName() + " aguardando..");
+			wait();
+		}
+		
+		int valor = fila.remove();
+		quantidadeElementos--;
+		notifyAll();
+		
+		return valor;
+	}	
 	
 }
